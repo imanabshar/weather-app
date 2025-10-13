@@ -14,6 +14,7 @@ const humidityDisplay = document.querySelector('#humidity');
 const windDisplay = document.querySelector('#wind');
 const errorMessage = document.querySelector('.error-message');
 const loading = document.querySelector('.loading');
+const weatherForecast = document.querySelector('.weatherForecast-container');
 const forecastGrid = document.querySelector('.forecast-grid');
 const unitButton = document.querySelector('.unit-button');
 
@@ -49,10 +50,12 @@ async function getWeatherData() {
         }
         errorMessage.style.display = 'none';
         weatherContainer.style.display = 'block';
+        weatherForecast.style.display = 'block';
         return response.json();
     }
     catch (error) {
         weatherContainer.style.display = 'none';
+        weatherForecast.style.display = 'none';
         errorMessage.style.display = 'block';
         errorMessage.innerText = error.message;
     }
