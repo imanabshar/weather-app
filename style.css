@@ -9,6 +9,7 @@
     text-align: center;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .search-form {
@@ -27,7 +28,7 @@
     font-size: 1rem;
 }
 
-.search-form button {
+.search-form #search-button {
     background-color: black;
     border: none;
     color: white;
@@ -147,4 +148,17 @@
     margin: 0.3rem 0;
   }
 
+  .unit-button {
+    border-radius: 8px;
+    height: 40px;
+    padding: 0rem 1rem;
+    font-size: 1rem;
+  }
+
+  .active{
+    font-weight: bold;
+  }
+  
+  
+ 
   

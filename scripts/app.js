@@ -15,9 +15,11 @@ const windDisplay = document.querySelector('#wind');
 const errorMessage = document.querySelector('.error-message');
 const loading = document.querySelector('.loading');
 const forecastGrid = document.querySelector('.forecast-grid');
+const unitButton = document.querySelector('.unit-button');
 
 const apiKey = 'PDRKKDZV8PMJHWX2LXY4KRVGS';
 let city;
+let unit = 'metric';
 
 updateWeather();
 searchForm.addEventListener('submit', (e) => {
@@ -25,9 +27,23 @@ searchForm.addEventListener('submit', (e) => {
     updateWeather();
 });
 
-async function getWeatherData(city) {
+unitButton.addEventListener('click', () => {
+    const celsius = document.querySelector('.celsius');
+    const farenheit = document.querySelector('.farenheit');
+    if (unit === 'metric') {
+        unit = 'us';
+    }
+    else if (unit == 'us') {
+        unit = 'metric';
+    }
+    celsius.classList.toggle('active');
+    farenheit.classList.toggle('active');
+    updateWeather();
+});
+
+async function getWeatherData() {
     try {
-        const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=${apiKey}`);
+        const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=${unit}&key=${apiKey}`);
         if (!response.ok) {
             throw new Error("The weather data for the city you entered isn't availaible");
         }
@@ -45,7 +61,12 @@ async function getWeatherData(city) {
 function displayWeather(data) {
     cityName.innerText = data.resolvedAddress;
     weatherCondition.innerText = data.currentConditions.conditions;
-    temperatureDisplay.innerHTML = `${data.currentConditions.temp} &deg;C`;
+    if (unit === 'metric') {
+        temperatureDisplay.innerHTML = `${data.currentConditions.temp} &deg;C`;
+    }
+    else {
+        temperatureDisplay.innerHTML = `${data.currentConditions.temp} &deg;F`;
+    }
     dateDisplay.innerText = getDate(data.currentConditions);
     timeDisplay.innerText = getTime(data);
     weatherIcon.src = getWeatherIcon(data.currentConditions);
@@ -81,7 +102,6 @@ function getTime(data) {
 
 function getWeatherIcon(data) {
     const icon = data.icon;
-    console.log(icon);
     return weatherIcons[icon] || './icons/cloudy.svg';
 }
 
@@ -106,7 +126,6 @@ function getWeatherForecast(data) {
            <img src="${icon}"/>
            <p>${temp}</p>
        </div>`
-        console.log(forecastHTML)
     }
     forecastGrid.innerHTML = forecastHTML;
 }
@@ -118,7 +137,7 @@ async function updateWeather() {
     weatherContainer.style.display = 'none';
     errorMessage.style.display = 'none'
 
-    const data = await getWeatherData(city);
+    const data = await getWeatherData();
     console.log(data);
     loading.style.display = 'none';
 
