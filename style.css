@@ -35,7 +35,8 @@
     font-size: 1rem;
 }
 
-.weather-container {
+.weather-container,
+.weatherForecast-container {
     border: 1px solid black;
     max-width: 80%;
     margin: 2rem auto;
@@ -126,3 +127,24 @@
         transform: rotate(360deg);
     }
 }
+
+.forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0px;
+    overflow-x: scroll;
+}
+
+.forecast-box {
+    border: 1px solid black;
+    border-radius: 10px;
+    text-align: center;
+    padding: 0.8rem 2rem;
+  }
+
+  .forecast-box h3{
+    margin: 0.3rem 0;
+  }
+
+  

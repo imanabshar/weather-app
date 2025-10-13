@@ -14,6 +14,7 @@ const humidityDisplay = document.querySelector('#humidity');
 const windDisplay = document.querySelector('#wind');
 const errorMessage = document.querySelector('.error-message');
 const loading = document.querySelector('.loading');
+const forecastGrid = document.querySelector('.forecast-grid');
 
 const apiKey = 'PDRKKDZV8PMJHWX2LXY4KRVGS';
 let city;
@@ -45,19 +46,27 @@ function displayWeather(data) {
     cityName.innerText = data.resolvedAddress;
     weatherCondition.innerText = data.currentConditions.conditions;
     temperatureDisplay.innerHTML = `${data.currentConditions.temp} &deg;C`;
-    dateDisplay.innerText = getDate(data);
+    dateDisplay.innerText = getDate(data.currentConditions);
     timeDisplay.innerText = getTime(data);
-    weatherIcon.src = getWeatherIcon(data);
+    weatherIcon.src = getWeatherIcon(data.currentConditions);
     getDetails(data);
+    getWeatherForecast(data);
 }
 
-function getDate(data) {
-    const date = new Date(data.currentConditions.datetimeEpoch * 1000);
+function getDate(data, includeDay = false) {
+    const date = new Date(data.datetimeEpoch * 1000);
     const day = date.getDate();
     const monthIndex = date.getMonth();
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const month = months[monthIndex];
     const formattedDate = `${day},${month}`;
+
+    if (includeDay) {
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const dayName = days[date.getDay()];
+        return `${day} ${month}, ${dayName}`;
+    }
+
     return formattedDate;
 }
 
@@ -71,7 +80,7 @@ function getTime(data) {
 }
 
 function getWeatherIcon(data) {
-    const icon = data.currentConditions.icon;
+    const icon = data.icon;
     console.log(icon);
     return weatherIcons[icon] || './icons/cloudy.svg';
 }
@@ -82,6 +91,26 @@ function getDetails(data) {
     windDisplay.innerText = `${data.currentConditions.windspeed} km/h`;
 }
 
+function getWeatherForecast(data) {
+
+    let forecastHTML = '';
+
+    for (let i = 0; i <= 6; i++) {
+        const day = data.days[i];
+        const temp = day.temp;
+        const date = getDate(day, true);
+        const icon = getWeatherIcon(day);
+        forecastHTML +=
+            `<div class=forecast-box>
+           <h3>${date}</h3>
+           <img src="${icon}"/>
+           <p>${temp}</p>
+       </div>`
+        console.log(forecastHTML)
+    }
+    forecastGrid.innerHTML = forecastHTML;
+}
+
 async function updateWeather() {
     city = searchInput.value.trim() || 'Karachi'; //by default weather details of Karachi will be shown
 
@@ -90,7 +119,7 @@ async function updateWeather() {
     errorMessage.style.display = 'none'
 
     const data = await getWeatherData(city);
-
+    console.log(data);
     loading.style.display = 'none';
 
     if (!data) return;
