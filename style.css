@@ -90,3 +90,9 @@
 .details-container .box p:first-child{
     margin-bottom: 1.5rem;
 }
+
+.error-message{
+    text-align: center;
+     font-size: 1.3rem;
+     margin-top: 2rem;
+}
