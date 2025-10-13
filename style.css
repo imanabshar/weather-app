@@ -96,3 +96,8 @@
      font-size: 1.3rem;
      margin-top: 2rem;
 }
+
+.weather-icon{
+    height: 5rem;
+    margin-right: 1rem;
+}

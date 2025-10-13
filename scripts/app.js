@@ -1,3 +1,5 @@
+import { weatherIcons } from "./weatherIcons.js";
+
 const searchForm = document.querySelector('.search-form');
 const searchInput = document.querySelector('#search-input');
 const weatherContainer = document.querySelector('.weather-container');
@@ -5,6 +7,7 @@ const cityName = document.querySelector('.city-name');
 const weatherCondition = document.querySelector('.weather-condition');
 const dateDisplay = document.querySelector('#date');
 const timeDisplay = document.querySelector('#time');
+const weatherIcon = document.querySelector('.weather-icon');
 const temperatureDisplay = document.querySelector('.temperature-display');
 const feelsLikeDisplay = document.querySelector('#feels');
 const humidityDisplay = document.querySelector('#humidity');
@@ -43,6 +46,7 @@ function displayWeather(data) {
     temperatureDisplay.innerHTML = `${data.currentConditions.temp} &deg;C`;
     dateDisplay.innerText = getDate(data);
     timeDisplay.innerText = getTime(data);
+    weatherIcon.src = getWeatherIcon(data);
     getDetails(data);
 }
 
@@ -63,6 +67,12 @@ function getTime(data) {
     const timePeriod = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
     return `${hours}:${minutes.toString().padStart(2, '0')} ${timePeriod}`;
+}
+
+function getWeatherIcon(data) {
+    const icon = data.currentConditions.icon;
+    console.log(icon);
+    return weatherIcons[icon] || './icons/cloudy.svg';
 }
 
 function getDetails(data) {

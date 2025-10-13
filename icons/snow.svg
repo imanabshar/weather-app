@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" id="snowfall">
+  <g>
+    <path fill="#ffb300" d="M44.5 8a1 1 0 0 0 1-1V3a1 1 0 1 0-2 0V7A1 1 0 0 0 44.5 8zM54.06 27.61A1 1 0 0 0 52.64 29l2.82 2.81a1 1 0 0 0 1.41-1.42zM35.65 11.62a1 1 0 0 0 .71-1.71L33.54 7.1a1 1 0 0 0-1.41 1.42l2.82 2.81A1 1 0 0 0 35.65 11.62zM61 18.47H57a1 1 0 1 0 0 2h4a1 1 0 0 0 0-2zM53.35 11.62a1 1 0 0 0 .71-.29l2.82-2.81A1 1 0 0 0 55.46 7.1L52.64 9.92a1 1 0 0 0 .71 1.71z"></path>
+    <path fill="#ffb300" d="M44.5,8.8a10.68,10.68,0,0,0-10.3,7.9,1,1,0,0,0,.36,1.05A13.54,13.54,0,0,1,39.78,27a1,1,0,0,0,1.1.89,7.16,7.16,0,0,1,5.39,1.67,1,1,0,0,0,.9.21,10.66,10.66,0,0,0-2.68-21Z"></path>
+    <circle cx="26" cy="48.99" r="1" fill="#bdbdbd"></circle>
+    <circle cx="26" cy="54.98" r="1" fill="#bdbdbd"></circle>
+    <circle cx="32" cy="51.99" r="1" fill="#bdbdbd"></circle>
+    <circle cx="32" cy="45.99" r="1" fill="#bdbdbd"></circle>
+    <circle cx="32" cy="57.98" r="1" fill="#bdbdbd"></circle>
+    <circle cx="20" cy="51.99" r="1" fill="#bdbdbd"></circle>
+    <circle cx="20" cy="45.99" r="1" fill="#bdbdbd"></circle>
+    <circle cx="20" cy="57.98" r="1" fill="#bdbdbd"></circle>
+    <circle cx="26" cy="60.98" r="1" fill="#bdbdbd"></circle>
+    <path fill="#4fc3f7" d="M41.67,25.85h0a15.5,15.5,0,0,0-30.56,0h0a9.05,9.05,0,0,0-1.19,18,1,1,0,0,0,.39.08H42.47a.93.93,0,0,0,.37-.08,9,9,0,0,0-1.17-18Z"></path>
+  </g>
+</svg>
