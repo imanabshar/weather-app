@@ -13,6 +13,7 @@ const feelsLikeDisplay = document.querySelector('#feels');
 const humidityDisplay = document.querySelector('#humidity');
 const windDisplay = document.querySelector('#wind');
 const errorMessage = document.querySelector('.error-message');
+const loading = document.querySelector('.loading');
 
 const apiKey = 'PDRKKDZV8PMJHWX2LXY4KRVGS';
 let city;
@@ -83,8 +84,16 @@ function getDetails(data) {
 
 async function updateWeather() {
     city = searchInput.value.trim() || 'Karachi'; //by default weather details of Karachi will be shown
+
+    loading.style.display = 'block';
+    weatherContainer.style.display = 'none';
+    errorMessage.style.display = 'none'
+
     const data = await getWeatherData(city);
-    if(!data) return;
+
+    loading.style.display = 'none';
+
+    if (!data) return;
     displayWeather(data);
 }
 
