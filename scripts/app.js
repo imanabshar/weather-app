@@ -73,7 +73,13 @@ function displayWeather(data, city) {
     //data based on coordinates gives resolvedAdress as long and lat 
     //TODO: set the coordinates to readable city name before displaying 
     if (city) {
-        cityName.innerText = data.resolvedAddress;
+        const resolvedAddress = data.resolvedAddress;
+        const parts = resolvedAddress.split(',');
+        if(parts.length === 1){
+            cityName.innerText = resolvedAddress;
+            return;
+        }
+        cityName.innerText = `${parts[0].trim()}, ${parts[parts.length - 1].trim()}`;
     }
 
     weatherCondition.innerText = data.currentConditions.conditions;
@@ -181,6 +187,7 @@ async function updateWeather() {
 
     loading.style.display = 'none';
 
+    console.log(data);
     if (!data) return;
     displayWeather(data, city);
 }
