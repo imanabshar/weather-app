@@ -42,9 +42,17 @@ unitButton.addEventListener('click', () => {
     updateWeather();
 });
 
-async function getWeatherData() {
+async function getWeatherData(lat, long) {
+    let url = ''
+    if (lat && long) {
+        url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${long}?unitGroup=${unit}&key=${apiKey}`
+    }
+    else {
+        url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=${unit}&key=${apiKey}`;
+
+    }
     try {
-        const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=${unit}&key=${apiKey}`);
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error("The weather data for the city you entered isn't availaible");
         }
@@ -61,8 +69,13 @@ async function getWeatherData() {
     }
 }
 
-function displayWeather(data) {
-    cityName.innerText = data.resolvedAddress;
+function displayWeather(data, city) {
+    //data based on coordinates gives resolvedAdress as long and lat 
+    //TODO: set the coordinates to readable city name before displaying 
+    if (city) {
+        cityName.innerText = data.resolvedAddress;
+    }
+
     weatherCondition.innerText = data.currentConditions.conditions;
     if (unit === 'metric') {
         temperatureDisplay.innerHTML = `${data.currentConditions.temp} &deg;C`;
@@ -134,18 +147,41 @@ function getWeatherForecast(data) {
 }
 
 async function updateWeather() {
-    city = searchInput.value.trim() || 'Karachi'; //by default weather details of Karachi will be shown
+    city = searchInput.value.trim();
 
     loading.style.display = 'block';
     weatherContainer.style.display = 'none';
     errorMessage.style.display = 'none'
+    weatherForecast.style.display = 'none';
 
-    const data = await getWeatherData();
-    console.log(data);
+    let data = '';
+
+    //If search for specific city then for that city data will be shown
+    if (city) {
+        data = await getWeatherData();
+
+    } 
+    else { //Initially the weather data of one's location will be shown by fetching the location
+        data = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude.toFixed(4);
+                    const lon = position.coords.longitude.toFixed(4);
+                    const weather = await getWeatherData(lat, lon);
+                    resolve(weather);
+                },
+                (error) => {
+                    //If any error occurs or location access is denied then default city will be Karachi
+                    city = 'Karachi';
+                    getWeatherData().then(resolve).catch(reject);
+                }
+            );
+        });
+    }
+
     loading.style.display = 'none';
 
     if (!data) return;
-    displayWeather(data);
+    displayWeather(data, city);
 }
-
 
