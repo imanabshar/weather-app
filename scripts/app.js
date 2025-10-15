@@ -75,7 +75,7 @@ function displayWeather(data, city) {
     if (city) {
         const resolvedAddress = data.resolvedAddress;
         const parts = resolvedAddress.split(',');
-        if(parts.length === 1){
+        if (parts.length === 1) {
             cityName.innerText = resolvedAddress;
             return;
         }
@@ -139,7 +139,13 @@ function getWeatherForecast(data) {
 
     for (let i = 0; i <= 6; i++) {
         const day = data.days[i];
-        const temp = day.temp;
+        let temp = '';
+        if (unit === 'metric') {
+            temp = day.temp + `&degC`;
+        }
+        else{
+            temp = day.temp + `&degF`
+        }
         const date = getDate(day, true);
         const icon = getWeatherIcon(day);
         forecastHTML +=
@@ -166,7 +172,7 @@ async function updateWeather() {
     if (city) {
         data = await getWeatherData();
 
-    } 
+    }
     else { //Initially the weather data of one's location will be shown by fetching the location
         data = await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(
