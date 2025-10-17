@@ -43,7 +43,7 @@ unitButton.addEventListener('click', () => {
 });
 
 async function getWeatherData(lat, long) {
-    let url = ''
+    let url = '';
     if (lat && long) {
         url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${long}?unitGroup=${unit}&key=${apiKey}`
     }
@@ -70,9 +70,7 @@ async function getWeatherData(lat, long) {
 }
 
 function displayWeather(data, city) {
-    //data based on coordinates gives resolvedAdress as long and lat 
-    //TODO: set the coordinates to readable city name before displaying 
-    if (city) {
+    if (!city) {
         const resolvedAddress = data.resolvedAddress;
         const parts = resolvedAddress.split(',');
         if (parts.length === 1) {
@@ -80,6 +78,9 @@ function displayWeather(data, city) {
             return;
         }
         cityName.innerText = `${parts[0].trim()}, ${parts[parts.length - 1].trim()}`;
+    }
+    else{
+        cityName.innerText = city;
     }
 
     weatherCondition.innerText = data.currentConditions.conditions;
@@ -137,13 +138,13 @@ function getWeatherForecast(data) {
 
     let forecastHTML = '';
 
-    for (let i = 0; i <= 6; i++) {
+    for (let i = 1; i <= 7; i++) {
         const day = data.days[i];
         let temp = '';
         if (unit === 'metric') {
             temp = day.temp + `&degC`;
         }
-        else{
+        else {
             temp = day.temp + `&degF`
         }
         const date = getDate(day, true);
@@ -156,6 +157,16 @@ function getWeatherForecast(data) {
        </div>`
     }
     forecastGrid.innerHTML = forecastHTML;
+}
+
+/*since with current location visual crosssing api contains resolved address as coordinates 
+so using another api to get readable name of location*/
+async function getCityName(lat, lon) {
+    const apiKey = '808844f31a2af533931b792cac05a29c';
+    const response = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${apiKey}`);
+    const data = await response.json();
+
+    return data[0]?.name;
 }
 
 async function updateWeather() {
@@ -179,13 +190,25 @@ async function updateWeather() {
                 async (position) => {
                     const lat = position.coords.latitude.toFixed(4);
                     const lon = position.coords.longitude.toFixed(4);
-                    const weather = await getWeatherData(lat, lon);
-                    resolve(weather);
+                    try {
+                        const [weather, city] = await Promise.all([
+                            getWeatherData(lat, lon),
+                            getCityName(lat, lon)
+                        ]);
+                        resolve({ weatherData: weather, cityName: city });
+                    } catch (err) {
+                        reject(err);
+                    }
                 },
-                (error) => {
+                async (error) => {
                     //If any error occurs or location access is denied then default city will be Karachi
-                    city = 'Karachi';
-                    getWeatherData().then(resolve).catch(reject);
+                    try {
+                        city = 'Karachi';
+                        const weather = await getWeatherData();
+                        resolve({ weatherData: weather, cityName: 'Karachi' });
+                    } catch (err) {
+                        reject(err);
+                    }
                 }
             );
         });
@@ -193,8 +216,8 @@ async function updateWeather() {
 
     loading.style.display = 'none';
 
-    console.log(data);
     if (!data) return;
-    displayWeather(data, city);
+
+   city ? displayWeather(data, city) : displayWeather(data.weatherData, data.cityName);
 }
 
