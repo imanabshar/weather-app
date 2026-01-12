@@ -263,6 +263,20 @@ body {
         gap: 0.7rem;
     }
 
+    .search-form {
+        max-width: 100%;
+    }
+
+    #search-button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .search-form input {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.7rem;
+    }
+
     .weather-container,
     .weatherForecast-container {
         max-width: 100%;
